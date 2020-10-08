@@ -1,8 +1,8 @@
 package com.github.androidkeystoredemo
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
