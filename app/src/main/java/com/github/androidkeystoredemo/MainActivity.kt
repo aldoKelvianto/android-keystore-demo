@@ -1,6 +1,6 @@
 package com.github.androidkeystoredemo
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 }
