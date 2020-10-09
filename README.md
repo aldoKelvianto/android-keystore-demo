@@ -1,9 +1,9 @@
 # Description
 
-An app that demonstrate usages of Keystore to store keys.
-The keys can be used for verify signature and for encryption and decryption.
+An app that demonstrates usages of Android Keystore API to store keys.
+The keys can be used to verify the signature and for encryption and decryption.
 
-![Screen Shot 2020-10-09 at 09.00.32](README.assets/test_results.png)
+![test_results](README.assets/test_results.png)
 
 # Usages
 
@@ -38,4 +38,5 @@ HEAD:app/src/main/java/com/github/androidkeystoredemo/EncryptDecrypt.kt \
 HEAD:app/src/main/java/com/github/androidkeystoredemo/EncryptDecrypt2.kt
 ```
 
-Both `EncryptDecrypt` and `EncryptDecrypt2` uses IV (Initialization Vector), to ensure that the same input always generate different output.
+Both `EncryptDecrypt` and `EncryptDecrypt2` uses IV (Initialization Vector), to ensure that the same input always generates different output.
+
