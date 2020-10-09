@@ -1,5 +1,6 @@
 package com.github.androidkeystoredemo
 
+import android.util.Base64
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -38,5 +39,22 @@ class EncryptDecryptTest {
 
         // Then
         assertFalse(plainBytes.contentEquals(wrongPinBytes))
+    }
+
+    @Test
+    fun alwaysCreateDifferentCipherText() {
+        // Given
+        val list = List(10) {
+            "1234".toByteArray()
+        }
+
+        // When
+        val listOfCipherText = list.map {
+            val pair = EncryptDecrypt.encrypt(it)
+            Base64.encodeToString(pair.first, Base64.DEFAULT)
+        }
+
+        // Then
+        assertTrue(listOfCipherText.distinct().size == list.size)
     }
 }

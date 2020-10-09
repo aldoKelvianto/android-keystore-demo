@@ -1,9 +1,10 @@
 package com.github.androidkeystoredemo
 
+import android.util.Base64
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.Assert.assertFalse
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -49,4 +50,20 @@ class VerifyWithKeyPairTest {
         assertFalse(isValid2)
     }
 
+    @Test
+    fun alwaysCreateDifferentSignature() {
+        // Given
+        val list = List(10) {
+            "1234".toByteArray()
+        }
+
+        // When
+        val listOfSignature = list.map {
+            val signature = VerifyWithKeyPair.sign(it)
+            Base64.encodeToString(signature, Base64.DEFAULT)
+        }
+
+        // Then
+        assertTrue(listOfSignature.distinct().size == list.size)
+    }
 }
