@@ -5,6 +5,7 @@ import android.security.keystore.KeyProperties
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
+import javax.crypto.spec.IvParameterSpec
 
 object EncryptDecrypt {
 
@@ -31,7 +32,7 @@ object EncryptDecrypt {
         keyGen.generateKey()
     }
 
-    fun encrypt(data: ByteArray): ByteArray {
+    fun encrypt(data: ByteArray): Pair<ByteArray, ByteArray> {
         // Step 3: Get the key from the AndroidKeystore
         val keyStore = KeyStore.getInstance(keystoreProvider).apply {
             load(null)
@@ -40,11 +41,14 @@ object EncryptDecrypt {
 
         // Step 4: Init cipher using key from AndroidKeystore
         cipher.init(Cipher.ENCRYPT_MODE, entry.secretKey)
+
         // Step 5: Encrypt
-        return cipher.doFinal(data)
+        val cipherBytes = cipher.doFinal(data)
+        // You can't reuse the IV. Return the IV for decryption
+        return Pair(cipherBytes, cipher.iv)
     }
 
-    fun decrypt(data: ByteArray): ByteArray {
+    fun decrypt(data: ByteArray, iv: ByteArray): ByteArray {
         // Step 3: Get the key from the AndroidKeystore
         val keyStore = KeyStore.getInstance(keystoreProvider).apply {
             load(null)
@@ -52,7 +56,9 @@ object EncryptDecrypt {
         val entry = keyStore.getEntry(keystoreAlias, null) as KeyStore.SecretKeyEntry
 
         // Step 4: Init cipher using key from AndroidKeystore
-        cipher.init(Cipher.DECRYPT_MODE, entry.secretKey)
+        val spec = IvParameterSpec(iv)
+        cipher.init(Cipher.DECRYPT_MODE, entry.secretKey, spec)
+        
         // Step 5: Decrypt
         return cipher.doFinal(data)
     }

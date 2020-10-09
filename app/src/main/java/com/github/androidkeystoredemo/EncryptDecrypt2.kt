@@ -7,7 +7,7 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.spec.GCMParameterSpec
 
-object EncryptDecryptWithIv {
+object EncryptDecrypt2 {
 
     private const val keystoreAlias = "pin3"
     private const val keystoreProvider = "AndroidKeyStore"

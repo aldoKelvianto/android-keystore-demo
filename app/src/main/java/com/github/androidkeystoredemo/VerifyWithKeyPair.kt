@@ -4,55 +4,62 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import java.security.KeyPairGenerator
 import java.security.KeyStore
-import java.security.PrivateKey
 import java.security.Signature
-import java.security.cert.Certificate
 
 object VerifyWithKeyPair {
 
     private const val keystoreAlias = "pin"
     private const val keystoreProvider = "AndroidKeyStore"
-    private lateinit var privateKey: PrivateKey
-    private lateinit var certificate: Certificate
+
     private val signatureCipher = Signature.getInstance("SHA256withECDSA")
 
     init {
-        initKeyPair()
-    }
-
-    private fun initKeyPair() {
-        val kpg: KeyPairGenerator = KeyPairGenerator.getInstance(
-            KeyProperties.KEY_ALGORITHM_EC,
-            keystoreProvider
-        )
-
+        // Step 1: Create specification for the key
         val spec: KeyGenParameterSpec = KeyGenParameterSpec.Builder(
             keystoreAlias,
             KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
         ).setDigests(KeyProperties.DIGEST_SHA256)
             .build()
 
+        // Step 2: Generate the keys
+        val kpg: KeyPairGenerator = KeyPairGenerator.getInstance(
+            KeyProperties.KEY_ALGORITHM_EC,
+            keystoreProvider
+        )
         kpg.initialize(spec)
+        // Once you do this, they keys are stored in the AndroidKeyStore
         kpg.generateKeyPair()
+    }
 
+    fun sign(data: ByteArray): ByteArray {
+        // Step 3: Get key pair from KeyStore
         val keyStore = KeyStore.getInstance(keystoreProvider).apply {
             load(null)
         }
-        // Get key pair from KeyStore
-        val entry = keyStore.getEntry(keystoreAlias, null) as KeyStore.PrivateKeyEntry
-        certificate = entry.certificate
-        privateKey = entry.privateKey
+        val entry = keyStore.getEntry(keystoreAlias, null)
+        val privateKey = (entry as KeyStore.PrivateKeyEntry).privateKey
+
+        // Step 4: Sign
+        return signatureCipher.run {
+            initSign(privateKey)
+            update(data)
+            sign()
+        }
     }
 
-    fun sign(data: ByteArray): ByteArray = signatureCipher.run {
-        initSign(privateKey)
-        update(data)
-        sign()
-    }
+    fun verify(signature: ByteArray, data: ByteArray): Boolean {
+        // Step 3: Get key pair from KeyStore
+        val keyStore = KeyStore.getInstance(keystoreProvider).apply {
+            load(null)
+        }
+        val entry = keyStore.getEntry(keystoreAlias, null)
+        val certificate = (entry as KeyStore.PrivateKeyEntry).certificate
 
-    fun verify(signature: ByteArray, data: ByteArray): Boolean = signatureCipher.run {
-        initVerify(certificate)
-        update(data)
-        verify(signature)
+        // Step 4: Verify
+        return signatureCipher.run {
+            initVerify(certificate)
+            update(data)
+            verify(signature)
+        }
     }
 }

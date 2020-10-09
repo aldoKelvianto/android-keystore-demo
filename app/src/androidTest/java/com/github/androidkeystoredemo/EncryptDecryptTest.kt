@@ -15,8 +15,10 @@ class EncryptDecryptTest {
         val pinBytes = "1234".toByteArray()
 
         // When
-        val cipherBytes = EncryptDecrypt.encrypt(pinBytes)
-        val plainBytes = EncryptDecrypt.decrypt(cipherBytes)
+        val pair = EncryptDecrypt.encrypt(pinBytes)
+        val cipherBytes = pair.first
+        val iv = pair.second
+        val plainBytes = EncryptDecrypt.decrypt(cipherBytes, iv)
 
         // Then
         assertTrue(plainBytes.contentEquals(pinBytes))
@@ -29,8 +31,10 @@ class EncryptDecryptTest {
         val wrongPinBytes = "12345".toByteArray()
 
         // When
-        val cipherBytes = EncryptDecrypt.encrypt(pinBytes)
-        val plainBytes = EncryptDecrypt.decrypt(cipherBytes)
+        val pair = EncryptDecrypt.encrypt(pinBytes)
+        val cipherBytes = pair.first
+        val iv = pair.second
+        val plainBytes = EncryptDecrypt.decrypt(cipherBytes, iv)
 
         // Then
         assertFalse(plainBytes.contentEquals(wrongPinBytes))

@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class EncryptDecryptWithIvTest {
+class EncryptDecrypt2Test {
 
     @Test
     fun encryptDecryptSuccess() {
@@ -15,10 +15,10 @@ class EncryptDecryptWithIvTest {
         val pinBytes = "1234".toByteArray()
 
         // When
-        val pair = EncryptDecryptWithIv.encrypt(pinBytes)
+        val pair = EncryptDecrypt2.encrypt(pinBytes)
         val cipherBytes = pair.first
         val iv = pair.second
-        val plainBytes = EncryptDecryptWithIv.decrypt(cipherBytes, iv)
+        val plainBytes = EncryptDecrypt2.decrypt(cipherBytes, iv)
 
         // Then
         assertTrue(plainBytes.contentEquals(pinBytes))
@@ -31,10 +31,10 @@ class EncryptDecryptWithIvTest {
         val wrongPinBytes = "12345".toByteArray()
 
         // When
-        val pair = EncryptDecryptWithIv.encrypt(pinBytes)
+        val pair = EncryptDecrypt2.encrypt(pinBytes)
         val cipherBytes = pair.first
         val iv = pair.second
-        val plainBytes = EncryptDecryptWithIv.decrypt(cipherBytes, iv)
+        val plainBytes = EncryptDecrypt2.decrypt(cipherBytes, iv)
 
         // Then
         assertFalse(plainBytes.contentEquals(wrongPinBytes))
