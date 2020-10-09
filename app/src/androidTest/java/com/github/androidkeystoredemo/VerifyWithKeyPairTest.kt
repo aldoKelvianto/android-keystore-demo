@@ -24,6 +24,7 @@ class VerifyWithKeyPairTest {
         val isValid2 = VerifyWithKeyPair.verify(signature2, pin1.toByteArray())
 
         // Then
+        // Don't verify the signature like this, use Signature cipher instead
         assertNotEquals(signature1, signature2)
         assertTrue(isValid1)
         assertTrue(isValid2)
