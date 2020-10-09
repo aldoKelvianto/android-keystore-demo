@@ -4,7 +4,6 @@ import android.util.Base64
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
-import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -29,7 +28,7 @@ class VerifyWithKeyPairTest {
         assertTrue(isValid2)
 
         // Don't verify the signature like this, use Signature cipher instead
-        assertNotEquals(signature1, signature2)
+        assertFalse(signature1.contentEquals(signature2))
     }
 
     @Test
