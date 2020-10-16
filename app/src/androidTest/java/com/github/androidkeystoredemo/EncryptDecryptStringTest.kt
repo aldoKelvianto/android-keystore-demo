@@ -21,6 +21,7 @@ class EncryptDecryptStringTest {
         val decryptedBytes = EncryptDecrypt.decrypt(cipherBytes, iv)
         val decryptedPin = String(decryptedBytes)
 
+        // Then
         assertEquals(decryptedPin, pin)
     }
 
